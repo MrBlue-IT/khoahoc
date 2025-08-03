@@ -2,46 +2,74 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gửi Khánh Huyền 💖</title>
   <style>
     body {
+      margin: 0;
+      padding: 0;
       background: linear-gradient(to right, #fbc2eb, #a6c1ee);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
       text-align: center;
-      padding: 50px;
       overflow: hidden;
       position: relative;
     }
+
+    .heart {
+      font-size: 60px;
+      animation: heartbeat 1s infinite;
+      margin-bottom: 10px;
+    }
+
     h1 {
       color: #ff3366;
-      font-size: 50px;
-      margin-bottom: 20px;
-      animation: heartbeat 1s infinite;
-    }
-    p {
-      font-size: 24px;
-      color: #333;
-    }
-    .poem {
-      margin-top: 40px;
-      font-style: italic;
-      font-size: 22px;
-      color: #444;
-      line-height: 1.6;
-      transition: opacity 1s ease-in-out;
-    }
-    @keyframes heartbeat {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    .heart {
-      font-size: 100px;
-      color: red;
+      font-size: 42px;
+      margin: 10px 0;
       animation: heartbeat 1s infinite;
     }
 
-    /* Hiệu ứng trái tim rơi */
+    p {
+      font-size: 22px;
+      color: #333;
+      margin: 5px 0;
+    }
+
+    strong {
+      color: #d6005d;
+    }
+
+    .love-image {
+      margin-top: 20px;
+    }
+
+    .love-image img {
+      width: 250px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .poem {
+      margin-top: 30px;
+      font-style: italic;
+      font-size: 20px;
+      color: #444;
+      line-height: 1.6;
+      max-width: 600px;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .music-player {
+      margin-top: 30px;
+      display: none;
+      width: 100%;
+      max-width: 600px;
+    }
+
     .falling-heart {
       position: absolute;
       top: -30px;
@@ -49,6 +77,12 @@
       color: red;
       animation: fall linear;
       pointer-events: none;
+    }
+
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
 
     @keyframes fall {
@@ -62,13 +96,11 @@
       }
     }
 
-    .love-image {
-      margin-top: 30px;
-    }
-    .love-image img {
-      width: 300px;
-      border-radius: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    @media (max-width: 480px) {
+      h1 { font-size: 28px; }
+      p, .poem { font-size: 18px; }
+      .heart { font-size: 40px; }
+      .love-image img { width: 180px; }
     }
   </style>
 </head>
@@ -84,11 +116,11 @@
 
   <div class="poem" id="poem"></div>
 
-<div class="music-player" style="margin-top: 40px;">
-  <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
-    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/hocvienminhanh/co-anh-o-day-roi&color=%23ff3366&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true">
-  </iframe>
-</div>
+  <div class="music-player" id="music-player">
+    <iframe id="sc-player" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
+      src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/hocvienminhanh/co-anh-o-day-roi&color=%23ff3366&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true">
+    </iframe>
+  </div>
 
   <script>
     const poems = [
@@ -136,16 +168,29 @@
       heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
       heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
       document.body.appendChild(heart);
-
-      setTimeout(() => {
-        heart.remove();
-      }, 5000);
+      setTimeout(() => heart.remove(), 5000);
     }
+
     setInterval(() => {
       for (let i = 0; i < 5; i++) {
         createFallingHeart();
       }
     }, 300);
+
+    let hasInteracted = false;
+
+    function enableMusicOnFirstClick() {
+      if (hasInteracted) return;
+      hasInteracted = true;
+      document.getElementById("music-player").style.display = "block";
+      const iframe = document.getElementById("sc-player");
+      iframe.src += "&auto_play=true";
+      document.removeEventListener("click", enableMusicOnFirstClick);
+      document.removeEventListener("touchstart", enableMusicOnFirstClick);
+    }
+
+    document.addEventListener("click", enableMusicOnFirstClick);
+    document.addEventListener("touchstart", enableMusicOnFirstClick);
   </script>
 </body>
 </html>
