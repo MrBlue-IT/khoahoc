@@ -9,6 +9,8 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       text-align: center;
       padding: 50px;
+      overflow: hidden;
+      position: relative;
     }
     h1 {
       color: #ff3366;
@@ -26,6 +28,7 @@
       font-size: 22px;
       color: #444;
       line-height: 1.6;
+      transition: opacity 1s ease-in-out;
     }
     @keyframes heartbeat {
       0% { transform: scale(1); }
@@ -37,6 +40,27 @@
       color: red;
       animation: heartbeat 1s infinite;
     }
+
+    /* Hiệu ứng trái tim rơi */
+    .falling-heart {
+      position: absolute;
+      top: -30px;
+      font-size: 20px;
+      color: red;
+      animation: fall linear;
+      pointer-events: none;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -45,16 +69,64 @@
   <p>Anh chỉ muốn nói rằng...</p>
   <p><strong>Anh yêu em! 💖</strong></p>
 
-  <div class="poem">
-    Gặp em như thể mộng mơ,<br>
-    Như hoa hé nở đón chờ bình minh.<br>
-    Nụ cười em tựa thiên tình,<br>
-    Làm tim anh khẽ rung rinh mỗi ngày.<br><br>
+  <div class="poem" id="poem"></div>
 
-    Gió ơi hãy nói giùm anh,<br>
-    Rằng anh thương nhớ mỏng manh bóng người.<br>
-    Huyền à, em có biết không?<br>
-    Trái tim này đã thuộc về em rồi. 💗
-  </div>
+  <script>
+    const poems = [
+      `Gặp em như thể mộng mơ,<br>
+      Như hoa hé nở đón chờ bình minh.<br>
+      Nụ cười em tựa thiên tình,<br>
+      Làm tim anh khẽ rung rinh mỗi ngày.`,
+
+      `Gió ơi hãy nói giùm anh,<br>
+      Rằng anh thương nhớ mỏng manh bóng người.<br>
+      Huyền à, em có biết không?<br>
+      Trái tim này đã thuộc về em rồi.`,
+
+      `Mỗi sáng thức dậy nhớ em,<br>
+      Như hoa khát nắng, như đêm khát đèn.<br>
+      Một mình anh đứng bên thềm,<br>
+      Nghĩ về Khánh Huyền mà lòng không yên.`,
+
+      `Dẫu đời có lắm gian nan,<br>
+      Chỉ cần em nắm nhẹ bàn tay anh.<br>
+      Bao nhiêu bão tố cũng thành<br>
+      Một lời yêu dịu dàng anh gửi em.`
+    ];
+
+    let index = 0;
+    const poemDiv = document.getElementById("poem");
+
+    function showPoem() {
+      poemDiv.style.opacity = 0;
+      setTimeout(() => {
+        poemDiv.innerHTML = poems[index];
+        poemDiv.style.opacity = 1;
+        index = (index + 1) % poems.length;
+      }, 500);
+    }
+
+    showPoem();
+    setInterval(showPoem, 5000);
+
+    function createFallingHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('falling-heart');
+      heart.textContent = '❤️';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+      heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 5000);
+    }
+    setInterval(() => {
+      for (let i = 0; i < 5; i++) {
+        createFallingHeart();
+      }
+    }, 300);
+  </script>
 </body>
 </html>
